@@ -318,9 +318,9 @@ function App() {
   const { appraisalPrice, taxExclusivePrice, consumptionTax } = useMemo(() => {
     const basePrice = iPhoneData[selectedModel][selectedRank][selectedCapacity];
     const totalDeduction = Object.values(deductions).reduce((sum, value) => sum + value, 0);
-    const taxExclusivePrice = Math.max(0, basePrice - totalDeduction);
-    const consumptionTax = Math.floor(taxExclusivePrice * 0.1);
-    const appraisalPrice = taxExclusivePrice + consumptionTax;
+    const appraisalPrice = Math.max(0, basePrice - totalDeduction);
+    const taxExclusivePrice = Math.floor(appraisalPrice / 1.1); // Calculate tax-exclusive price
+    const consumptionTax = appraisalPrice - taxExclusivePrice; // Calculate consumption tax
     return { appraisalPrice, taxExclusivePrice, consumptionTax };
   }, [selectedModel, selectedRank, selectedCapacity, deductions]);
 
