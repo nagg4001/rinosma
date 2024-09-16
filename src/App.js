@@ -315,10 +315,13 @@ function App() {
     truetone: 0
   });
 
-  const appraisalPrice = useMemo(() => {
+  const { appraisalPrice, taxExclusivePrice, consumptionTax } = useMemo(() => {
     const basePrice = iPhoneData[selectedModel][selectedRank][selectedCapacity];
     const totalDeduction = Object.values(deductions).reduce((sum, value) => sum + value, 0);
-    return Math.max(0, basePrice - totalDeduction);
+    const taxExclusivePrice = Math.max(0, basePrice - totalDeduction);
+    const consumptionTax = Math.floor(taxExclusivePrice * 0.1);
+    const appraisalPrice = taxExclusivePrice + consumptionTax;
+    return { appraisalPrice, taxExclusivePrice, consumptionTax };
   }, [selectedModel, selectedRank, selectedCapacity, deductions]);
 
   const handleDeductionChange = (key, value) => {
@@ -405,9 +408,18 @@ function App() {
           {renderSelect('Truetone', deductionOptions.truetone, 'truetone')}
         </Box>
         <Box mt={6} textAlign="center">
-          <Text fontSize="2xl" fontWeight="bold" color="green.500">
-            査定金額: ¥{appraisalPrice.toLocaleString()}
-          </Text>
+        <Text fontSize="2xl" fontWeight="bold" color="green.500">
+    端末買取金額: ¥{appraisalPrice.toLocaleString()}（税込）
+  </Text>
+  <Text fontSize="lg" mt={2}>
+    ＊内訳＊
+  </Text>
+  <Text>
+    税別金額: ¥{taxExclusivePrice.toLocaleString()}
+  </Text>
+  <Text>
+    消費税（10%）: ¥{consumptionTax.toLocaleString()}
+  </Text>
         </Box>
       </Box>
     </ErrorBoundary>
