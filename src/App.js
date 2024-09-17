@@ -308,7 +308,7 @@ function ErrorFallback({ error, resetErrorBoundary }) {
   );
 }
 
-function App() {
+export default function Component() {
   const [selectedModel, setSelectedModel] = useState(models[0]);
   const [selectedRank, setSelectedRank] = useState(ranks[0]);
   const [selectedCapacity, setSelectedCapacity] = useState(Object.keys(iPhoneData[models[0]][ranks[0]])[0]);
@@ -401,25 +401,25 @@ function App() {
           </FormControl>
           <FormControl>
             <FormLabel>容量</FormLabel>
-            <Flex>
-              <Select onChange={(e) => {
-                setSelectedCapacity(e.target.value);
-                setCustomAppraisalAmount(null);
-              }}>
-                {Object.keys(iPhoneData[selectedModel][selectedRank]).map((capacity) => (
-                  <option key={capacity} value={capacity}>
-                    {capacity} - ¥{iPhoneData[selectedModel][selectedRank][capacity].toLocaleString()}
-                  </option>
-                ))}
-              </Select>
-              <Input
-                type="number"
-                placeholder="査定額"
-                value={customAppraisalAmount !== null ? customAppraisalAmount : iPhoneData[selectedModel][selectedRank][selectedCapacity]}
-                onChange={(e) => setCustomAppraisalAmount(Number(e.target.value))}
-                ml={2}
-              />
-            </Flex>
+            <Select onChange={(e) => {
+              setSelectedCapacity(e.target.value);
+              setCustomAppraisalAmount(null);
+            }}>
+              {Object.keys(iPhoneData[selectedModel][selectedRank]).map((capacity) => (
+                <option key={capacity} value={capacity}>
+                  {capacity}
+                </option>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl>
+            <FormLabel>端末買取金額</FormLabel>
+            <Input
+              type="number"
+              placeholder="査定額"
+              value={customAppraisalAmount !== null ? customAppraisalAmount : iPhoneData[selectedModel][selectedRank][selectedCapacity]}
+              onChange={(e) => setCustomAppraisalAmount(Number(e.target.value))}
+            />
           </FormControl>
         </Box>
         <Box mt={4}>
@@ -448,5 +448,3 @@ function App() {
     </ErrorBoundary>
   );
 }
-
-export default App;
