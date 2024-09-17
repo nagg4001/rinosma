@@ -336,7 +336,7 @@ export default function Component() {
   };
 
   const renderSelect = (label, options, deductionKey) => (
-    <FormControl>
+    <FormControl key={deductionKey}>
       <FormLabel>{label}</FormLabel>
       <Select
         placeholder="選択してください"
@@ -423,12 +423,7 @@ export default function Component() {
           </FormControl>
         </Box>
         <Box mt={4}>
-          {renderSelect('フレームの傷', deductionOptions.frameScratch, 'frameScratch')}
-          {renderSelect('画面の傷', deductionOptions.screenScratch, 'screenScratch')}
-          {renderSelect('ネットワーク利用制限', deductionOptions.networkLimitation, 'networkLimitation')}
-          {renderSelect('カメラのシミ', deductionOptions.cameraStain, 'cameraStain')}
-          {renderSelect('故障箇所', deductionOptions.malfunction, 'malfunction')}
-          {renderSelect('Truetone', deductionOptions.truetone, 'truetone')}
+          {Object.entries(deductionOptions).map(([key, options]) => renderSelect(key, options, key))}
         </Box>
         <Box mt={6} textAlign="center">
           <Text fontSize="2xl" fontWeight="bold" color="green.500">
