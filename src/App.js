@@ -312,18 +312,18 @@ export default function App() {
   const [selectedModel, setSelectedModel] = useState(models[0]);
   const [selectedRank, setSelectedRank] = useState(ranks[0]);
   const [selectedCapacity, setSelectedCapacity] = useState(Object.keys(iPhoneData[models[0]][ranks[0]])[0]);
-  const [customAppraisalAmount, setCustomAppraisalAmount] = useState(null);
+  const [customAppraisalAmount, setCustomAppraisalAmount] = useState('');
   const [deductions, setDeductions] = useState({
-    frameScratch: 0,
-    screenScratch: 0,
-    networkLimitation: 0,
-    cameraStain: 0,
-    malfunction: 0,
-    truetone: 0
+    フレームの傷: 0,
+    画面の傷: 0,
+    ネットワーク利用制限: 0,
+    カメラのシミ: 0,
+    故障箇所: 0,
+    Truetone: 0
   });
 
   const { appraisalPrice, taxExclusivePrice, consumptionTax } = useMemo(() => {
-    let basePrice = customAppraisalAmount !== null ? customAppraisalAmount : iPhoneData[selectedModel][selectedRank][selectedCapacity];
+    let basePrice = customAppraisalAmount !== '' ? Number(customAppraisalAmount) : iPhoneData[selectedModel][selectedRank][selectedCapacity];
     const totalDeduction = Object.values(deductions).reduce((sum, value) => sum + value, 0);
     const appraisalPrice = Math.max(0, basePrice - totalDeduction);
     const taxExclusivePrice = Math.floor(appraisalPrice / 1.1);
@@ -376,7 +376,7 @@ export default function App() {
               onChange={(e) => {
                 setSelectedModel(e.target.value);
                 setSelectedCapacity(Object.keys(iPhoneData[e.target.value][selectedRank])[0]);
-                setCustomAppraisalAmount(null);
+                setCustomAppraisalAmount('');
               }}
             >
               {models.map((model) => (
@@ -390,7 +390,7 @@ export default function App() {
             <FormLabel>ランク</FormLabel>
             <Select onChange={(e) => {
               setSelectedRank(e.target.value);
-              setCustomAppraisalAmount(null);
+              setCustomAppraisalAmount('');
             }}>
               {ranks.map((rank) => (
                 <option key={rank} value={rank}>
@@ -403,7 +403,7 @@ export default function App() {
             <FormLabel>容量</FormLabel>
             <Select onChange={(e) => {
               setSelectedCapacity(e.target.value);
-              setCustomAppraisalAmount(null);
+              setCustomAppraisalAmount('');
             }}>
               {Object.keys(iPhoneData[selectedModel][selectedRank]).map((capacity) => (
                 <option key={capacity} value={capacity}>
@@ -417,13 +417,18 @@ export default function App() {
             <Input
               type="number"
               placeholder="査定額"
-              value={customAppraisalAmount !== null ? customAppraisalAmount : iPhoneData[selectedModel][selectedRank][selectedCapacity]}
-              onChange={(e) => setCustomAppraisalAmount(Number(e.target.value))}
+              value={customAppraisalAmount !== '' ? customAppraisalAmount : iPhoneData[selectedModel][selectedRank][selectedCapacity]}
+              onChange={(e) => setCustomAppraisalAmount(e.target.value)}
             />
           </FormControl>
         </Box>
         <Box mt={4}>
-          {Object.entries(deductionOptions).map(([key, options]) => renderSelect(key, options, key))}
+          {renderSelect('フレームの傷', deductionOptions.frameScratch, 'フレームの傷')}
+          {renderSelect('画面の傷', deductionOptions.screenScratch, '画面の傷')}
+          {renderSelect('ネットワーク利用制限', deductionOptions.networkLimitation, 'ネットワーク利用制限')}
+          {renderSelect('カメラのシミ', deductionOptions.cameraStain, 'カメラのシミ')}
+          {renderSelect('故障箇所', deductionOptions.malfunction, '故障箇所')}
+          {renderSelect('Truetone', deductionOptions.truetone, 'Truetone')}
         </Box>
         <Box mt={6} textAlign="center">
           <Text fontSize="2xl" fontWeight="bold" color="green.500">
