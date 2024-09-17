@@ -335,6 +335,13 @@ export default function App() {
     setDeductions((prev) => ({ ...prev, [key]: Number(value) }));
   };
 
+  const handleAppraisalAmountChange = (e) => {
+    const value = e.target.value;
+    if (value === '' || /^\d+$/.test(value)) {
+      setCustomAppraisalAmount(value);
+    }
+  };
+
   const renderSelect = (label, options, deductionKey) => (
     <FormControl key={deductionKey}>
       <FormLabel>{label}</FormLabel>
@@ -415,10 +422,10 @@ export default function App() {
           <FormControl>
             <FormLabel>端末買取金額</FormLabel>
             <Input
-              type="number"
+              type="text"
               placeholder="査定額"
               value={customAppraisalAmount !== '' ? customAppraisalAmount : iPhoneData[selectedModel][selectedRank][selectedCapacity]}
-              onChange={(e) => setCustomAppraisalAmount(e.target.value)}
+              onChange={handleAppraisalAmountChange}
             />
           </FormControl>
         </Box>
