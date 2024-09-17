@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Box, Heading, Select, FormControl, FormLabel, Text, Input, Alert, AlertIcon, Flex } from '@chakra-ui/react';
+import { Box, Heading, Select, FormControl, FormLabel, Text, Input, Alert, AlertIcon } from '@chakra-ui/react';
 import { ErrorBoundary } from 'react-error-boundary';
 
 
@@ -308,7 +308,7 @@ function ErrorFallback({ error, resetErrorBoundary }) {
   );
 }
 
-export default function Component() {
+export default function App() {
   const [selectedModel, setSelectedModel] = useState(models[0]);
   const [selectedRank, setSelectedRank] = useState(ranks[0]);
   const [selectedCapacity, setSelectedCapacity] = useState(Object.keys(iPhoneData[models[0]][ranks[0]])[0]);
