@@ -293,19 +293,11 @@ const deductionOptions = {
   ]
 };
 
-function ErrorFallback({ error, resetErrorBoundary }) {
-  return (
-    <Alert status="error" onClick={resetErrorBoundary}>
-      <AlertIcon />
-      エラーが発生しました: {error.message}
-    </Alert>
-  );
-}
-
 function App() {
   const [selectedModel, setSelectedModel] = useState(models[0]);
   const [selectedRank, setSelectedRank] = useState(ranks[0]);
   const [selectedCapacity, setSelectedCapacity] = useState(Object.keys(iPhoneData[models[0]][ranks[0]])[0]);
+  const [customAppraisalAmount, setCustomAppraisalAmount] = useState(null);
   const [deductions, setDeductions] = useState({
     frameScratch: 0,
     screenScratch: 0,
@@ -316,13 +308,13 @@ function App() {
   });
 
   const { appraisalPrice, taxExclusivePrice, consumptionTax } = useMemo(() => {
-    const basePrice = iPhoneData[selectedModel][selectedRank][selectedCapacity];
+    let basePrice = customAppraisalAmount !== null ? customAppraisalAmount : iPhoneData[selectedModel][selectedRank][selectedCapacity];
     const totalDeduction = Object.values(deductions).reduce((sum, value) => sum + value, 0);
     const appraisalPrice = Math.max(0, basePrice - totalDeduction);
-    const taxExclusivePrice = Math.floor(appraisalPrice / 1.1); // Calculate tax-exclusive price
-    const consumptionTax = appraisalPrice - taxExclusivePrice; // Calculate consumption tax
+    const taxExclusivePrice = Math.floor(appraisalPrice / 1.1);
+    const consumptionTax = appraisalPrice - taxExclusivePrice;
     return { appraisalPrice, taxExclusivePrice, consumptionTax };
-  }, [selectedModel, selectedRank, selectedCapacity, deductions]);
+  }, [selectedModel, selectedRank, selectedCapacity, deductions, customAppraisalAmount]);
 
   const handleDeductionChange = (key, value) => {
     setDeductions((prev) => ({ ...prev, [key]: Number(value) }));
@@ -369,6 +361,7 @@ function App() {
               onChange={(e) => {
                 setSelectedModel(e.target.value);
                 setSelectedCapacity(Object.keys(iPhoneData[e.target.value][selectedRank])[0]);
+                setCustomAppraisalAmount(null);
               }}
             >
               {models.map((model) => (
@@ -380,7 +373,10 @@ function App() {
           </FormControl>
           <FormControl>
             <FormLabel>ランク</FormLabel>
-            <Select onChange={(e) => setSelectedRank(e.target.value)}>
+            <Select onChange={(e) => {
+              setSelectedRank(e.target.value);
+              setCustomAppraisalAmount(null);
+            }}>
               {ranks.map((rank) => (
                 <option key={rank} value={rank}>
                   {rank}
@@ -390,13 +386,25 @@ function App() {
           </FormControl>
           <FormControl>
             <FormLabel>容量</FormLabel>
-            <Select onChange={(e) => setSelectedCapacity(e.target.value)}>
-              {Object.keys(iPhoneData[selectedModel][selectedRank]).map((capacity) => (
-                <option key={capacity} value={capacity}>
-                  {capacity}
-                </option>
-              ))}
-            </Select>
+            <Flex>
+              <Select onChange={(e) => {
+                setSelectedCapacity(e.target.value);
+                setCustomAppraisalAmount(null);
+              }}>
+                {Object.keys(iPhoneData[selectedModel][selectedRank]).map((capacity) => (
+                  <option key={capacity} value={capacity}>
+                    {capacity} - ¥{iPhoneData[selectedModel][selectedRank][capacity].toLocaleString()}
+                  </option>
+                ))}
+              </Select>
+              <Input
+                type="number"
+                placeholder="査定額"
+                value={customAppraisalAmount !== null ? customAppraisalAmount : iPhoneData[selectedModel][selectedRank][selectedCapacity]}
+                onChange={(e) => setCustomAppraisalAmount(Number(e.target.value))}
+                ml={2}
+              />
+            </Flex>
           </FormControl>
         </Box>
         <Box mt={4}>
@@ -408,18 +416,18 @@ function App() {
           {renderSelect('Truetone', deductionOptions.truetone, 'truetone')}
         </Box>
         <Box mt={6} textAlign="center">
-        <Text fontSize="2xl" fontWeight="bold" color="green.500">
-    端末買取金額: ¥{appraisalPrice.toLocaleString()}（税込）
-  </Text>
-  <Text fontSize="lg" mt={2}>
-    ＊内訳＊
-  </Text>
-  <Text>
-    税別金額: ¥{taxExclusivePrice.toLocaleString()}
-  </Text>
-  <Text>
-    消費税（10%）: ¥{consumptionTax.toLocaleString()}
-  </Text>
+          <Text fontSize="2xl" fontWeight="bold" color="green.500">
+            端末買取金額: ¥{appraisalPrice.toLocaleString()}（税込）
+          </Text>
+          <Text fontSize="lg" mt={2}>
+            ＊内訳＊
+          </Text>
+          <Text>
+            税別金額: ¥{taxExclusivePrice.toLocaleString()}
+          </Text>
+          <Text>
+            消費税（10%）: ¥{consumptionTax.toLocaleString()}
+          </Text>
         </Box>
       </Box>
     </ErrorBoundary>
