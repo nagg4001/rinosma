@@ -337,9 +337,7 @@ export default function App() {
 
   const handleAppraisalAmountChange = (e) => {
     const value = e.target.value;
-    if (value === '' || /^\d+$/.test(value)) {
-      setCustomAppraisalAmount(value);
-    }
+    setCustomAppraisalAmount(value);
   };
 
   const renderSelect = (label, options, deductionKey) => (
