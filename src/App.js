@@ -293,6 +293,21 @@ const deductionOptions = {
   ]
 };
 
+function ErrorFallback({ error, resetErrorBoundary }) {
+  return (
+    <Alert status="error">
+      <AlertIcon />
+      <Box>
+        <Text>エラーが発生しました:</Text>
+        <Text>{error.message}</Text>
+        <Box mt={2}>
+          <button onClick={resetErrorBoundary}>再試行</button>
+        </Box>
+      </Box>
+    </Alert>
+  );
+}
+
 function App() {
   const [selectedModel, setSelectedModel] = useState(models[0]);
   const [selectedRank, setSelectedRank] = useState(ranks[0]);
