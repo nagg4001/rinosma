@@ -420,7 +420,7 @@ export default function App() {
             </Select>
           </FormControl>
           <FormControl>
-            <FormLabel>【変更がある場合のみ】端末買取金額</FormLabel>
+            <FormLabel>【変更がある場合のみ記載】端末買取金額</FormLabel>
             <Input
               type="text"
               placeholder="査定額"
