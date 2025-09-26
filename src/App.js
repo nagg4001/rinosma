@@ -1300,13 +1300,13 @@ export default function App() {
   const [selectedCapacity, setSelectedCapacity] = useState(Object.keys(iPhoneData[models[0]][ranks[0]])[0])
   const [customAppraisalAmount, setCustomAppraisalAmount] = useState("")
   const [deductions, setDeductions] = useState({
-    ??????: 0,
-    ????: 0,
-    ??????????: 0,
-    ??????: 0,
-    ????: 0,
-    Truetone: 0,
-  })
+  フレームの傷: 0,
+  画面の傷: 0,
+  ネットワーク利用制限: 0,
+  カメラのシミ: 0,
+  故障箇所: 0,
+  Truetone: 0,
+})
 
   const { appraisalPrice, taxExclusivePrice, consumptionTax } = useMemo(() => {
     const basePrice =
