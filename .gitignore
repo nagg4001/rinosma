@@ -25,3 +25,6 @@ yarn-error.log*
 
 # credentials
 *credentials*.json
+claudecode-*.json
+client_secret_*.json
+youtube_token.json
