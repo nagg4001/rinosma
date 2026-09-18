@@ -28,3 +28,7 @@ yarn-error.log*
 claudecode-*.json
 client_secret_*.json
 youtube_token.json
+
+# 別GitHubアカウント(rinosma-development)の独立リポジトリ。
+# このリポジトリ(nagg4001/rinosma)には絶対に取り込まないこと
+/listing-csv/
